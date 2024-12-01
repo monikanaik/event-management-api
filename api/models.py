@@ -32,7 +32,9 @@ class Event(models.Model):
 class Ticket(models.Model):  # Ensure it inherits from models.Model
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_ticket")
     event = models.ForeignKey(
-        Event, on_delete=models.CASCADE, related_name="event_ticket"
+        Event,
+        on_delete=models.CASCADE,
+        related_name="event_ticket",
     )
     quantity = models.IntegerField()
     purchase_date = models.DateTimeField(auto_now_add=True)

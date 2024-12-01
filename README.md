@@ -32,7 +32,7 @@ python manage.py migrate
 ```bash
 python manage.py runserver
 ```
-### Usage Instructions  
+### Usage Instructions
 * Use Postman or any other API client to interact with the API endpoints.
 * Authenticate users by obtaining and passing JWT tokens in the Authorization header.
 ### Folder Structure
@@ -53,4 +53,3 @@ event-management-api/
 1. The system ensures role-based access for Admin and User actions.
 2. Error handling is implemented for edge cases, such as non-existent events or invalid ticket requests.
 3. JWT-based authentication provides secure access to the API.
-

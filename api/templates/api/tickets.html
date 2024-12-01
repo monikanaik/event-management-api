@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ticket Information</title>
+</head>
+<body>
+    <h1>Tickets</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>User Role</th>
+                <th>Event Name</th>
+                <th>Quantity</th>
+                <th>Purchase Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if tickets %}
+                {% for ticket in tickets %}
+                <tr>
+                    <td>{{ ticket.user }}</td>
+                    <td>{{ ticket.event }}</td>
+                    <td>{{ ticket.quantity }}</td>
+                    <td>{{ ticket.purchase_date }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4">No tickets found.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+<div class="pagination">
+    {% if items.has_previous %}
+        <a href="?page={{ items.previous_page_number }}">Previous</a>
+    {% endif %}
+    <span>Page {{ items.number }} of {{ items.paginator.num_pages }}</span>
+    {% if items.has_next %}
+        <a href="?page={{ items.next_page_number }}">Next</a>
+    {% endif %}
+</div>
+</body>
+</html>

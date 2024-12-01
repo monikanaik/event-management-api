@@ -1,4 +1,11 @@
+import json
+
+from django.core import paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import connection
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -8,9 +15,10 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from api.models import User, Event, Ticket
 
 from api.serializers import UserSerializer, EventSerializer, TicketSerializer
+import pandas as pd
 
 
-class RegisterUserView(generics.CreateAPIView):
+class RegisterUserView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -51,7 +59,8 @@ class TicketPurchaseView(APIView):
             event = Event.objects.get(id=id)
         except Event.DoesNotExist:
             return Response(
-                {"error": "Event not found."}, status=status.HTTP_404_NOT_FOUND
+                {"error": "Event not found."},
+                status=status.HTTP_404_NOT_FOUND,
             )
 
         quantity = int(request.data.get("quantity", 0))
@@ -71,7 +80,9 @@ class TicketPurchaseView(APIView):
         event.save()
 
         ticket = Ticket.objects.create(
-            user=request.user, event=event, quantity=quantity
+            user=request.user,
+            event=event,
+            quantity=quantity,
         )
         serializer = TicketSerializer(ticket)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -97,3 +108,82 @@ def top_3_events_by_tickets_sold():
             }
             for r in results
         ]
+
+
+def even_list(request):
+    location = request.GET.get("location")
+    category = request.GET.get("category")
+    event = {"category": category, "location": location}
+    return JsonResponse(event)
+
+
+def event_user_detail(request, event_id, username):
+    return JsonResponse({"event_id": event_id, "username": username})
+
+
+"""@csrf_exempt
+def customers(request):
+    if request.method == "POST":
+        data = json.loads(request.body)  # Parse JSON body
+        cust_name = data.get("cust_name")
+        print(cust_name)
+        return JsonResponse({"customerName": cust_name})
+    return JsonResponse({"error": "Invalid method"}, status=405)"""
+
+
+class CustomersView(APIView):
+    def post(self, request):
+        cust_name = request.data.get("cust_name")
+        print(cust_name)
+        return Response({"customerName": cust_name})
+
+
+def get_lazy_loading(request):
+    data = {}
+    tickets = Ticket.objects.all()
+    for ticket in tickets:
+        data["user"] = ticket.user.role
+        data["event"] = ticket.event.name
+        data["quantity"] = ticket.quantity
+        data["purchase"] = ticket.purchase_date
+        print(data)
+    return HttpResponse("hello")
+
+
+def get_select_related(request):
+    tickets = Ticket.objects.select_related("event")
+    page = request.GET.get("page", 1)
+    size = 10
+
+    # Use the paginator efficiently with the selected tickets
+    paginator = Paginator(tickets, size)
+
+    try:
+        items_on_page = paginator.page(page)
+    except PageNotAnInteger:
+        items_on_page = paginator.page(1)  # Deliver the first page
+    except EmptyPage:
+        items_on_page = paginator.page(paginator.num_pages)  # Deliver the last page
+
+    # Create the data dictionary using list comprehension with correct attribute access
+    data = [
+        {
+            "user": ticket.user.role,
+            "event": ticket.event.name,
+            "quantity": ticket.quantity,
+            "purchase_date": ticket.purchase_date,  # Use the correct attribute name
+        }
+        for ticket in items_on_page.object_list  # Iterate over paginated objects
+    ]
+
+    # Context dictionary with paginator information for template rendering
+    context = {
+        "tickets": data,
+        "items": items_on_page,  # Include the paginator object for pagination logic
+    }
+
+    return render(request, "api/tickets.html", context)
+
+
+def get_prefetch_related(request):
+    pass

@@ -11,6 +11,8 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'eventapi.settings')
+from eventapi import environment
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", environment.get_settings())
 
 application = get_asgi_application()
