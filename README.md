@@ -1,5 +1,7 @@
 # Event Management API
 
+[![Django CI](https://github.com/monikanaik/event-management-api/actions/workflows/django.yml/badge.svg)](https://github.com/monikanaik/event-management-api/actions/workflows/django.yml)
+
 This project is a Django-based REST API for managing events and ticket purchases. It supports role-based access control with **Admin** and **User** roles.
 
 ---
