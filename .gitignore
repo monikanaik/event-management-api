@@ -1,5 +1,6 @@
 venv/
 .env
+settings.py
 mixins
 __pycache__/
 db.sqlite3
