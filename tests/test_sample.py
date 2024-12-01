@@ -16,5 +16,6 @@ def django_db_setup():
 
 @pytest.mark.django_db
 def test_my_user():
-    me = User.objects.get(username="admin")
+    user = User.objects.create_superuser("Mouni@12")
+    me = User.objects.get(username=user)
     assert me.is_superuser
