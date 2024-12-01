@@ -1,6 +1,6 @@
 import os
 
-environment = os.environ.get("ENVIRONMENT", "LOCAL")
+environment = os.environ.get("ENVIRONMENT", "STAGING")
 
 
 def get_settings():

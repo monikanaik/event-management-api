@@ -3,7 +3,8 @@
 from .base import *
 import os
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+# SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = "django-insecure-jg5=-3ej&yie50s#5ga=n9-j5bg78_s*^byys85af1us@_c#3l"
 
 DEBUG = False
 
