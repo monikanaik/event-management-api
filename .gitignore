@@ -1,6 +1,7 @@
 venv/
 .env
-settings.py
+settings
+.pytest_cache
 mixins
 __pycache__/
 db.sqlite3
