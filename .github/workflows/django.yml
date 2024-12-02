@@ -13,7 +13,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.11, 3.12]
+        python-version: [3.11]
 
     steps:
     - uses: actions/checkout@v4
@@ -27,4 +27,6 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        python manage.py runserver_test
+        pytest -v --cov-fail-under=80
+#        pytest --cov=event_management --cov-report=html --cov-report=term --cov-fail-under=80
+#        python manage.py runserver_test

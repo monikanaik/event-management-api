@@ -1,6 +1,8 @@
 venv/
 .env
-settings
+.coverage
+api/.coverage
+pytestdebug.log
 .pytest_cache
 mixins
 __pycache__/

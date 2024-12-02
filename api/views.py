@@ -21,6 +21,8 @@ import pandas as pd
 class RegisterUserView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    authentication_classes = []
+    permission_classes = []
 
 
 class EventListCreateView(APIView):
@@ -110,34 +112,6 @@ def top_3_events_by_tickets_sold():
         ]
 
 
-def even_list(request):
-    location = request.GET.get("location")
-    category = request.GET.get("category")
-    event = {"category": category, "location": location}
-    return JsonResponse(event)
-
-
-def event_user_detail(request, event_id, username):
-    return JsonResponse({"event_id": event_id, "username": username})
-
-
-"""@csrf_exempt
-def customers(request):
-    if request.method == "POST":
-        data = json.loads(request.body)  # Parse JSON body
-        cust_name = data.get("cust_name")
-        print(cust_name)
-        return JsonResponse({"customerName": cust_name})
-    return JsonResponse({"error": "Invalid method"}, status=405)"""
-
-
-class CustomersView(APIView):
-    def post(self, request):
-        cust_name = request.data.get("cust_name")
-        print(cust_name)
-        return Response({"customerName": cust_name})
-
-
 def get_lazy_loading(request):
     data = {}
     tickets = Ticket.objects.all()
@@ -183,7 +157,3 @@ def get_select_related(request):
     }
 
     return render(request, "api/tickets.html", context)
-
-
-def get_prefetch_related(request):
-    pass

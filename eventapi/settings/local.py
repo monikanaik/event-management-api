@@ -3,8 +3,7 @@ from datetime import timedelta
 
 from .base import *
 
-# SECRET_KEY = os.environ.get("SECRET_KEY")
-SECRET_KEY = "django-insecure-jg5=-3ej&yie50s#5ga=n9-j5bg78_s*^byys85af1us@_c#3l"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 
 DEBUG = True
@@ -43,4 +42,4 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"
 
 AUTH_USER_MODEL = "api.User"
-TEST_RUNNER = "eventapi.runner.PytestTestRunner"
+TEST_RUNNER = "api.test_runner.CustomTestRunner"

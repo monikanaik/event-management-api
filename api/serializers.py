@@ -1,8 +1,8 @@
-from rest_framework import serializers
-from .models import User, Event, Ticket
+from rest_framework.serializers import ModelSerializer
+from api.models import User, Event, Ticket
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "username", "password", "role"]
@@ -13,13 +13,13 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class EventSerializer(serializers.ModelSerializer):
+class EventSerializer(ModelSerializer):
     class Meta:
         model = Event
         fields = "__all__"
 
 
-class TicketSerializer(serializers.ModelSerializer):
+class TicketSerializer(ModelSerializer):
     class Meta:
         model = Ticket
         fields = "__all__"

@@ -9,16 +9,6 @@ from app.models import User, Event
 from app.serializers import UserSerializers, EventSerializers
 from rest_framework.views import APIView
 
-# Create your views here.
-"""
-class CreateAPIView(generics.ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializers
-    authentication_classes = []  # Disable authentication
-    permission_classes = [AllowAny]  # Allow anyone to access
-
-"""
-
 
 class CreateAPIView(
     mixins.ListModelMixin,
@@ -56,13 +46,6 @@ class UserRetrieveUpdateDeleteView(
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
-
-
-"""
-Event Management (Admin Only):
-POST /api/events/ - Create a new event (Admin only).
-GET /api/events/ - Fetch all events (Admin and User)
-"""
 
 
 class EventAPIViews(
