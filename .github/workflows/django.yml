@@ -28,5 +28,3 @@ jobs:
     - name: Run Tests
       run: |
         pytest -v --cov-fail-under=80
-#        pytest --cov=event_management --cov-report=html --cov-report=term --cov-fail-under=80
-#        python manage.py runserver_test
