@@ -30,6 +30,3 @@ jobs:
       # Set Django secret key
       - name: Set environment variables
         run: echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
-
-      # Run tests
-      - name: Run tests
