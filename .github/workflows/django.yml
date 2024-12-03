@@ -33,4 +33,3 @@ jobs:
 
       # Run tests
       - name: Run tests
-#        run: python manage.py runs
