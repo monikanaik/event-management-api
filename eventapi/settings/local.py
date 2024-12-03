@@ -41,4 +41,3 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"
 
 AUTH_USER_MODEL = "api.User"
-TEST_RUNNER = "api.test_runner.CustomTestRunner"
