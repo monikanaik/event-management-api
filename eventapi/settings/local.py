@@ -3,7 +3,8 @@ from datetime import timedelta
 
 from .base import *
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+# SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = "django-insecure-jg5=-3ej&yie50s#5ga=n9-j5bg78_s*^byys85af1us@_c#3l"
 
 
 DEBUG = True
@@ -20,7 +21,6 @@ DATABASES = {
         "HOST": os.getenv("DB_HOST"),
         "PORT": os.getenv("DB_PORT"),  # Default PostgreSQL port
     },
-    "default_other": {},
 }
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),

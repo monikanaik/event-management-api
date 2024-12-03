@@ -102,6 +102,16 @@ class TestRegisterUserView:
         """
         Test that the API returns a list of users.
         """
+        User.objects.create_user(
+            username="testuser",
+            password="password123",
+            role="admin",
+        )
+        User.objects.create_user(
+            username="testuser1",
+            password="password1231",
+            role="user",
+        )
         # Make a GET request
         response = self.client.get(USER_ENDPOINT)
 
@@ -112,9 +122,9 @@ class TestRegisterUserView:
         sorted_response_data = sorted(response.data, key=lambda x: x["username"])
 
         # Assert the correct number of users are returned
-        assert sorted_response_data
-        assert sorted_response_data[0]["username"] == "Admin"
-        assert sorted_response_data[1]["username"] == "abell"
+        # assert sorted_response_data
+        assert sorted_response_data[0]["username"] == "testuser"
+        assert sorted_response_data[1]["username"] == "testuser1"
 
 
 '''
