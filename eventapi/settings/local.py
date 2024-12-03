@@ -13,15 +13,20 @@ ALLOWED_HOSTS = ["*"]
 # Development-specific database
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",  # or 'django.db.backends.mysql'
+        "ENGINE": "django.db.backends.postgresql",  # Use PostgreSQL for development/production
         "NAME": os.getenv("DB_NAME"),
         "USER": os.getenv("DB_USER"),
         "PASSWORD": os.getenv("DB_PASSWORD"),
         "HOST": os.getenv("DB_HOST"),
-        "PORT": os.getenv("DB_PORT"),  # Default PostgreSQL port
-        "TEST": {"NAME": "test"},
+        "PORT": os.getenv("DB_PORT"),  # Default PostgreSQL port (5432)
+        # Settings for the test database
+        "TEST": {
+            "ENGINE": "django.db.backends.sqlite3",  # Use SQLite for testing
+            "NAME": ":memory:",  # In-memory SQLite database
+        },
     },
 }
+
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
