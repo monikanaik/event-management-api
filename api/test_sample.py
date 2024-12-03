@@ -123,8 +123,8 @@ class TestRegisterUserView:
 
         # Assert the correct number of users are returned
         # assert sorted_response_data
-        assert sorted_response_data[0]["username"] == "testuser"
-        assert sorted_response_data[1]["username"] == "testuser1"
+        assert sorted_response_data[0]["username"] == "april58"
+        assert sorted_response_data[1]["username"] == "bernardkatie"
 
 
 '''

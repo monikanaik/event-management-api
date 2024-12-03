@@ -33,4 +33,4 @@ jobs:
 
       # Run tests
       - name: Run tests
-        run: python manage.py test
+        run: python manage.py runserver_test
