@@ -31,6 +31,18 @@ jobs:
       - name: Set environment variables
         run: echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
 
+      # Run migrations
+      - name: Run migrations
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          python manage.py makemigrations
+          python manage.py migrate
+
       # Run tests
       - name: Run tests
         run: python manage.py runserver_test
