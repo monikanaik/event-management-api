@@ -19,6 +19,7 @@ DATABASES = {
         "PASSWORD": os.getenv("DB_PASSWORD"),
         "HOST": os.getenv("DB_HOST"),
         "PORT": os.getenv("DB_PORT"),  # Default PostgreSQL port
+        "TEST": {"NAME": "test"},
     },
 }
 REST_FRAMEWORK = {
