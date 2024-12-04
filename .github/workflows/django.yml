@@ -33,7 +33,7 @@ jobs:
 
       - name: Set test database
         run: |
-          echo "DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}}" > eventapi/settings_test.py
+          echo "DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}}" > eventapi/settings.local.py
           env:
             DJANGO_SETTINGS_MODULE: eventapi.settings.local
 
