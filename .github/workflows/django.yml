@@ -31,9 +31,11 @@ jobs:
       - name: Set environment variables
         run: echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
 
-      # Debug database connection (optional)
-      - name: Debug database connection
-        run: pg_isready -h ${{ secrets.DB_HOST }} -p ${{ secrets.DB_PORT }}
+      - name: Set test database
+        run: |
+          echo "DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}}" > eventapi/settings_test.py
+          env:
+            DJANGO_SETTINGS_MODULE: eventapi.settings.local
 
       # Run migrations
       - name: Run migrations
