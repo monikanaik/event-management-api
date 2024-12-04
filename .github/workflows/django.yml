@@ -1,63 +1,48 @@
-name: Django CI
+name: Django CI/CD Pipeline
 
 on:
   push:
     branches:
       - main
   pull_request:
+    branches:
+      - main
 
 jobs:
-  build:
+  # Deployment job
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the code
+      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Set up Python
+      # Step 2: Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      # Start PostgreSQL
-      - name: Start PostgreSQL
-        uses: harmon758/postgresql-action@v1
-        with:
-          postgresql version: '11'
-          user: ${{ secrets.DB_USER }}
-          password: ${{ secrets.DB_PASSWORD }}
-          database: ${{ secrets.DB_NAME }}
 
-      # Install dependencies
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Set environment variables
-      - name: Set environment variables
+      # Step 4: Deploy to server via SSH
+      - name: Deploy to production
         run: |
-          echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
-          echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
-          echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
-          echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
-          echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
-
-      # Configure test database
-      - name: Set test database
-        run: |
-          echo "from eventapi.settings.base import *" > eventapi/settings.local.py
-          echo "DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}}" >> eventapi/settings.local.py
-        env:
-          DJANGO_SETTINGS_MODULE: eventapi.settings.local
-
-      # Run migrations
-      - name: Run migrations
-        run: |
-          python manage.py makemigrations
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          cd /path/to/your/project
+          git pull origin main
+          source /path/to/venv/bin/activate
+          pip install -r requirements.txt
           python manage.py migrate
+          python manage.py collectstatic --noinput
+          sudo systemctl restart your_django_gunicorn_service
+          sudo systemctl restart nginx
+          EOF
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           DB_HOST: ${{ secrets.DB_HOST }}
@@ -65,16 +50,3 @@ jobs:
           DB_NAME: ${{ secrets.DB_NAME }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DJANGO_SETTINGS_MODULE: eventapi.settings.local
-
-      # Run tests
-      - name: Run tests
-        run: pytest -v --disable-warnings
-        env:
-          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DJANGO_SETTINGS_MODULE: eventapi.settings.local
