@@ -27,30 +27,46 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Set Django secret key
+      # Set environment variables
       - name: Set environment variables
-        run: echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
+        run: |
+          echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
+          echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
 
+      # Configure test database
       - name: Set test database
         run: |
-          echo "from eventapi.settings import *" > eventapi/settings.local.py
-          echo "DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}}" > eventapi/settings.local.py
+          echo "from eventapi.settings.base import *" > eventapi/settings.local.py
+          echo "DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}}" >> eventapi/settings.local.py
         env:
-            DJANGO_SETTINGS_MODULE: eventapi.settings.local
-        shell: /usr/bin/bash -e {0}
+          DJANGO_SETTINGS_MODULE: eventapi.settings.local
 
       # Run migrations
       - name: Run migrations
+        run: |
+          python manage.py makemigrations
+          python manage.py migrate
         env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_PORT: ${{ secrets.DB_PORT }}
           DB_NAME: ${{ secrets.DB_NAME }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        run: |
-          python manage.py makemigrations
-          python manage.py migrate
+          DJANGO_SETTINGS_MODULE: eventapi.settings.local
 
       # Run tests
       - name: Run tests
         run: pytest -v --disable-warnings
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DJANGO_SETTINGS_MODULE: eventapi.settings.local
