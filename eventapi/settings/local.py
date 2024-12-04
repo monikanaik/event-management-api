@@ -20,6 +20,9 @@ DATABASES = {
         "HOST": os.getenv("DB_HOST"),
         "PORT": os.getenv("DB_PORT"),  # Default PostgreSQL port (5432)
         # Settings for the test database
+        "OPTIONS": {
+            "sslmode": "require",
+        },
         "TEST": {
             "ENGINE": "django.db.backends.sqlite3",  # Use SQLite for testing
             "NAME": ":memory:",  # In-memory SQLite database

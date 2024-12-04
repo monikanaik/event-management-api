@@ -30,18 +30,46 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Step 4: Deploy to server via SSH
-      - name: Deploy to production
+      # Step 4: Set environment variables for Django
+      - name: Set environment variables
         run: |
+          echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
+          echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+
+      # Step 5: Deploy to production via SSH (Web server hosting Django)
+      - name: Deploy to production server
+        run: |
+          # Ensure SSH is available and deploy Django
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          echo "Starting deployment to production server"
+
+          # Navigate to your Django project directory
           cd /path/to/your/project
+
+          # Pull the latest changes from the main branch
           git pull origin main
+
+          # Activate the virtual environment
           source /path/to/venv/bin/activate
+
+          # Install dependencies
           pip install -r requirements.txt
+
+          # Run migrations
           python manage.py migrate
+
+          # Collect static files
           python manage.py collectstatic --noinput
-          sudo systemctl restart your_django_gunicorn_service
+
+          # Restart Gunicorn and Nginx (or your web server)
+          sudo systemctl restart gunicorn
           sudo systemctl restart nginx
+
+          echo "Deployment completed successfully!"
           EOF
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
