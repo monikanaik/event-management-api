@@ -35,9 +35,9 @@ jobs:
         run: |
           echo "from eventapi.settings import *" > eventapi/settings.local.py
           echo "DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}}" > eventapi/settings.local.py
-          env:
+        env:
             DJANGO_SETTINGS_MODULE: eventapi.settings.local
-          shell: /usr/bin/bash -e {0}
+        shell: /usr/bin/bash -e {0}
 
       # Run migrations
       - name: Run migrations
