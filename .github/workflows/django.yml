@@ -20,6 +20,14 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
+      # Start PostgreSQL
+      - name: Start PostgreSQL
+        uses: harmon758/postgresql-action@v1.2.0
+        with:
+          postgresql version: 13
+          user: ${{ secrets.DB_USER }}
+          password: ${{ secrets.DB_PASSWORD }}
+          database: ${{ secrets.DB_NAME }}
 
       # Install dependencies
       - name: Install dependencies
