@@ -22,9 +22,9 @@ jobs:
           python-version: '3.11'
       # Start PostgreSQL
       - name: Start PostgreSQL
-        uses: harmon758/postgresql-action@v1.2.0
+        uses: harmon758/postgresql-action@v1
         with:
-          postgresql version: 13
+          postgresql version: '11'
           user: ${{ secrets.DB_USER }}
           password: ${{ secrets.DB_PASSWORD }}
           database: ${{ secrets.DB_NAME }}
